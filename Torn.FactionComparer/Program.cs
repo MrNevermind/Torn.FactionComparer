@@ -11,6 +11,10 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
-                    webBuilder.UseStartup<Startup>();
+#if !DEBUG
+                webBuilder.UseKestrel();
+                webBuilder.UseUrls("http://176.223.137.147:8080");
+#endif
+                webBuilder.UseStartup<Startup>();
             });
 }
