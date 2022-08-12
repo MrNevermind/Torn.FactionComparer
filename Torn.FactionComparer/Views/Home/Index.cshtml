@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <table style="width: 400px; margin: 0 auto;">
+        <tr>
+            <td style="text-align: left;">Enter your Torn API Key</td>
+            <td><input type="text" id="api-key" name="api-key" value=""/></td>
+        </tr>
+        <tr>
+            <td style="text-align: left;">Enter first faction ID</td>
+            <td><input type="number" id="first-faction" name="first-faction" value=""/></td>
+        </tr>
+        <tr>
+            <td style="text-align: left;">Enter seccond faction ID</td>
+            <td><input type="number" id="seccond-faction" name="seccond-faction" value=""/></td>
+        </tr>
+    </table>
+    <br/>
+    <button id="get-statistics-button">Get Statistics</button>
+    <br/>
+    <img id="result_image"/>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#get-statistics-button").bind("click", function() {
+        $.get({
+            url: 'torn/factions',
+            data: {
+                apiKey: $("#api-key").val(),
+                firstFaction: $("#first-faction").val(),
+                seccondFaction: $("#seccond-faction").val()
+            },
+            success: function(data){
+                $("#result_image").attr("src","data:image/jpg;base64," + data);
+            }
+        });
+    });
+});
+</script>

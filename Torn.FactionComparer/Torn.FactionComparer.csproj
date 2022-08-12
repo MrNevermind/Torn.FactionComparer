@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\generated_images\**" />
+    <Content Remove="wwwroot\generated_images\**" />
+    <EmbeddedResource Remove="wwwroot\generated_images\**" />
+    <None Remove="wwwroot\generated_images\**" />
+  </ItemGroup>
+
+	<ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+		<PackageReference Include="AutoFixture" Version="4.11.0" />
+	</ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Torn.FactionComparer.Contracts\Torn.FactionComparer.Contracts.csproj" />
+    <ProjectReference Include="..\Torn.FactionComparer.Services\Torn.FactionComparer.Services.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,253 @@
+﻿@using Torn.FactionComparer.Services
+@model FactionCompareImageData
+<html>
+    <head>
+        <style>
+         tbody td.title-left{
+             text-align: left;
+         }
+         tbody td.title-right{
+             text-align: right;
+         }
+         tbody td.number{
+             text-align: center;
+         }
+        </style>
+    </head>
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="3">@Model.FirstFaction.Name</th>
+                    <th colspan="3">@Model.SeccondFaction.Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="title-left">Respect</td>
+                    <td class="number">@Model.FirstFaction.Respect</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.Respect</td>
+                    <td class="title-right">Respect</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Best Chain</td>
+                    <td class="number">@Model.FirstFaction.BestChain</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.BestChain</td>
+                    <td class="title-right">Best Chain</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Members</td>
+                    <td class="number">@Model.FirstFaction.Members</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.Members</td>
+                    <td class="title-right">Members</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Average Age</td>
+                    <td class="number">@Model.FirstFaction.AverageAge</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.AverageAge</td>
+                    <td class="title-right">Average Age</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Average Level</td>
+                    <td class="number">@Model.FirstFaction.AverageLevel</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.AverageLevel</td>
+                    <td class="title-right">Average Level</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Average Activity</td>
+                    <td class="number"></td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number"></td>
+                    <td class="title-right">Average Activity</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Average Activity / Day</td>
+                    <td class="number"></td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number"></td>
+                    <td class="title-right">Average Activity / Day</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Average Awards</td>
+                    <td class="number">@Model.FirstFaction.AverageAwards</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.AverageAwards</td>
+                    <td class="title-right">Average Awards</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Xanax</td>
+                    <td class="number">@Model.FirstFaction.Xanax</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.Xanax</td>
+                    <td class="title-right">Xanax</td>
+                </tr>
+                <tr>
+                    <td class="title-left">LSD</td>
+                    <td class="number">@Model.FirstFaction.LSD</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.LSD</td>
+                    <td class="title-right">LSD</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Vicodin</td>
+                    <td class="number">@Model.FirstFaction.Vicodin</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.Vicodin</td>
+                    <td class="title-right">Vicodin</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Overdoses</td>
+                    <td class="number">@Model.FirstFaction.Overdoses</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.Overdoses</td>
+                    <td class="title-right">Overdoses</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Energy Refils</td>
+                    <td class="number">@Model.FirstFaction.EnergyRefils</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.EnergyRefils</td>
+                    <td class="title-right">Energy Refils</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Energy Drinks</td>
+                    <td class="number">@Model.FirstFaction.EnergyDrinks</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.EnergyDrinks</td>
+                    <td class="title-right">Energy Drinks</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Boosters</td>
+                    <td class="number">@Model.FirstFaction.Boosters</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.Boosters</td>
+                    <td class="title-right">Boosters</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Stat Enchancers</td>
+                    <td class="number">@Model.FirstFaction.StatEnhancers</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.StatEnhancers</td>
+                    <td class="title-right">Stat Enchancers</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Attacks Made</td>
+                    <td class="number">@Model.FirstFaction.AttacksMade</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.AttacksMade</td>
+                    <td class="title-right">Attacks Made</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Revives Given</td>
+                    <td class="number">@Model.FirstFaction.RevivesGiven</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.RevivesGiven</td>
+                    <td class="title-right">Revives Given</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Revives Received</td>
+                    <td class="number">@Model.FirstFaction.RevivesReceived</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.RevivesReceived</td>
+                    <td class="title-right">Revives Received</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Bounties Places</td>
+                    <td class="number">@Model.FirstFaction.BountiesPlaced</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.BountiesPlaced</td>
+                    <td class="title-right">Bounties Places</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Bounties Received</td>
+                    <td class="number">@Model.FirstFaction.BountiesReceived</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.BountiesReceived</td>
+                    <td class="title-right">Bounties Received</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Mission Credits</td>
+                    <td class="number">@Model.FirstFaction.MissionCredits</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.MissionCredits</td>
+                    <td class="title-right">Mission Credits</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Special Ammo</td>
+                    <td class="number">@Model.FirstFaction.SpecialAmmo</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.SpecialAmmo</td>
+                    <td class="title-right">Special Ammo</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Job Points</td>
+                    <td class="number">@Model.FirstFaction.JobPoints</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.JobPoints</td>
+                    <td class="title-right">Job Points</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Respect Earned</td>
+                    <td class="number">@Model.FirstFaction.RespectEarned</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.RespectEarned</td>
+                    <td class="title-right">Respect Earned<td>
+                </tr>
+                <tr>
+                    <td class="title-left">Networth</td>
+                    <td class="number">@Model.FirstFaction.Networth</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.Networth</td>
+                    <td class="title-right">Networth</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Karma</td>
+                    <td class="number">@Model.FirstFaction.Karma</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.Karma</td>
+                    <td class="title-right">Karma</td>
+                </tr>
+                <tr>
+                    <td class="title-left">Books Read</td>
+                    <td class="number">@Model.FirstFaction.BooksRead</td>
+                    <td class="progress-left"><div></div></td>
+                    <td class="progress-right"><div></div></td>
+                    <td class="number">@Model.SeccondFaction.BooksRead</td>
+                    <td class="title-right">Books Read</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
