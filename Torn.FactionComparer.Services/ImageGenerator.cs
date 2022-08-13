@@ -4,12 +4,12 @@ namespace Torn.FactionComparer.Services
 {
     public interface IImageGenerator
     {
-        byte[] GenerateImage(string html);
+        Task<byte[]> GenerateImage(string html);
     }
 
     public class ImageGenerator : IImageGenerator
     {
-        public byte[] GenerateImage(string html)
+        public async Task<byte[]> GenerateImage(string html)
         {
             var guid = Guid.NewGuid();
 
@@ -19,16 +19,34 @@ namespace Torn.FactionComparer.Services
 
             var inputFile = Path.Combine(fileDir, $"{guid}.html");
             var outputFile = Path.Combine(fileDir, $"{guid}.jpeg");
-            File.WriteAllText(inputFile, html);
+            await File.WriteAllTextAsync(inputFile, html);
 
             var pProcess = new Process();
             pProcess.StartInfo.FileName = "wkhtmltoimage";
-            pProcess.StartInfo.Arguments = $"--format jpeg {inputFile} {outputFile}";
+            pProcess.StartInfo.Arguments = $"--format jpeg --crop-w 900 {inputFile} {outputFile}";
             pProcess.Start();
-            pProcess.WaitForExit();
+            await pProcess.WaitForExitAsync();
             pProcess.Close();
 
-            return File.ReadAllBytes(outputFile);
+            var bytes = await File.ReadAllBytesAsync(outputFile);
+
+            SafeFileDelete(inputFile);
+            SafeFileDelete(outputFile);
+
+            return bytes;
+        }
+
+        private void SafeFileDelete(string fileName)
+        {
+            try
+            {
+                File.Delete(fileName);
+            }
+            catch(IOException ex)
+            {
+                Thread.Sleep(100);
+                SafeFileDelete(fileName);
+            }
         }
     }
 }

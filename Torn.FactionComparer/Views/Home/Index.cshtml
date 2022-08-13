@@ -3,29 +3,46 @@
 }
 
 <div class="text-center">
-    <table style="width: 400px; margin: 0 auto;">
+    <table style="width: 835px; margin: 0 auto;">
         <tr>
-            <td style="text-align: left;">Enter your Torn API Key</td>
-            <td><input type="text" id="api-key" name="api-key" value=""/></td>
+            <td style="text-align: left; width:180px;">Enter your Torn API Key</td>
+            <td style="width: 200px;"><input type="text" id="api-key" name="api-key" value="xpe4xSH6KWbVdtUi"/></td>
+            <td></td>
         </tr>
         <tr>
             <td style="text-align: left;">Enter first faction ID</td>
-            <td><input type="number" id="first-faction" name="first-faction" value=""/></td>
+            <td><input type="number" id="first-faction" name="first-faction" value="12249"/></td>
+            <td id="cache-info-first">
+                <div class="visually-hidden">
+                    <span></span>
+                    <button id="clear-cache-first">Clear Cache</button>
+                </div>
+            </td>
         </tr>
         <tr>
             <td style="text-align: left;">Enter seccond faction ID</td>
-            <td><input type="number" id="seccond-faction" name="seccond-faction" value=""/></td>
+            <td><input type="number" id="seccond-faction" name="seccond-faction" value="36235"/></td>
+            <td id="cache-info-seccond">
+                <div class="visually-hidden">
+                    <span></span>
+                    <button id="clear-cache-seccond">Clear Cache</button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: left;">
+                <button id="get-statistics-button">Get Statistics</button>
+                <div class="spinner-border visually-hidden"></div>
+            </td>
         </tr>
     </table>
-    <br/>
-    <button id="get-statistics-button">Get Statistics</button>
-    <br/>
     <img id="result_image"/>
 </div>
 
 <script type="text/javascript">
 $(document).ready(function() {
     $("#get-statistics-button").bind("click", function() {
+        $(".spinner-border").removeClass("visually-hidden");
         $.get({
             url: 'torn/factions',
             data: {
@@ -35,6 +52,71 @@ $(document).ready(function() {
             },
             success: function(data){
                 $("#result_image").attr("src","data:image/jpg;base64," + data);
+                $(".spinner-border").addClass("visually-hidden");
+            }
+        });
+    });
+    
+    $("#clear-cache-first").bind("click", function() {
+        $.get({
+            url: 'torn/clear',
+            data: {
+                factionId: $("#first-faction").val()
+            },
+            success: function(data){
+                $("#cache-info-first div").addClass("visually-hidden");
+            }
+        });
+    });
+    
+    $("#clear-cache-seccond").bind("click", function() {
+        $.get({
+            url: 'torn/clear',
+            data: {
+                factionId: $("#seccond-faction").val()
+            },
+            success: function(data){
+                $("#cache-info-seccond div").addClass("visually-hidden");
+            }
+        });
+    });
+
+    $("#first-faction").on("change paste keyup", function(){
+        $.get({
+            url: 'torn/cache',
+            data: {
+                factionId: $("#first-faction").val()
+            },
+            success: function(data){
+                if(typeof data != 'undefined')
+                {
+                    $("#cache-info-first span").text("Cache date UTC: " + data);
+                    $("#cache-info-first div").removeClass("visually-hidden");
+                }
+                else
+                {
+                    $("#cache-info-first div").addClass("visually-hidden");
+                }
+            }
+        });
+    });
+
+    $("#seccond-faction").on("change paste keyup", function(){
+        $.get({
+            url: 'torn/cache',
+            data: {
+                factionId: $("#seccond-faction").val()
+            },
+            success: function(data){
+                if(typeof data != 'undefined')
+                {
+                    $("#cache-info-seccond span").text("Cache date UTC: " + data);
+                    $("#cache-info-seccond div").removeClass("visually-hidden");
+                }
+                else
+                {
+                    $("#cache-info-seccond div").addClass("visually-hidden");
+                }
             }
         });
     });

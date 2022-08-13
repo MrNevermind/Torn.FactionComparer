@@ -1,8 +1,15 @@
-﻿namespace Torn.FactionComparer.Services
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Torn.FactionComparer.Infrastructure.Tables
 {
-    public class FactionCompareData
+    [Table("FactionCompareData")]
+    public class FactionCompareDataTable
     {
-        public int ID { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int FactionID { get; set; }
         public string Name { get; set; }
         public int Respect { get; set; }
         public int BestChain { get; set; }
@@ -32,5 +39,6 @@
         public long Networth { get; set; }
         public int Karma { get; set; }
         public int BooksRead { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 }

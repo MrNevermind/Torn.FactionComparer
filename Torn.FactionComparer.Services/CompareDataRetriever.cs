@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Torn.FactionComparer.Contracts.FactionData;
 using Torn.FactionComparer.Contracts.UserData;
 
@@ -13,48 +12,38 @@ namespace Torn.FactionComparer.Services
     public class CompareDataRetriever : ICompareDataRetriever
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IMemoryCache _memmoryCache;
-
+        private readonly IDbService _dbService;
+        private readonly IStatsCalculator _statsCalculator;
         private string _apiKey;
-        private int _innerRequestCount = 0;
-        private int _requestCount
-        {
-            get
-            {
-                return _innerRequestCount;
-            }
-            set
-            {
-                _innerRequestCount = value;
-                if (_innerRequestCount >= 100)
-                {
-                    _innerRequestCount = 0;
-                    Thread.Sleep(1000 * 60);
-                }
-            }
-        }
 
-        public CompareDataRetriever(IHttpClientFactory httpClientFactory, IMemoryCache memmoryCache)
+        public CompareDataRetriever(IHttpClientFactory httpClientFactory, IDbService dbService, IStatsCalculator statsCalculator)
         {
             _httpClientFactory = httpClientFactory;
-            _memmoryCache = memmoryCache;
+            _dbService = dbService;
+            _statsCalculator = statsCalculator;
         }
 
         public async Task<FactionCompareImageData> GetFactionCompareImageData(string apiKey, int firstFactionId, int seccondFactionId)
         {
             _apiKey = apiKey;
 
+            var firstFactionCompareData = await GetFactionCompareData(firstFactionId);
+            var seccondFactionCompareData = await GetFactionCompareData(seccondFactionId);
+
             return new FactionCompareImageData()
             {
-                FirstFaction = await GetFactionCompareData(firstFactionId),
-                SeccondFaction = await GetFactionCompareData(seccondFactionId)
+                FirstFaction = firstFactionCompareData,
+                SeccondFaction = seccondFactionCompareData,
+                Stats = _statsCalculator.CalculateStats(firstFactionCompareData, seccondFactionCompareData)
             };
         }
         private async Task<FactionCompareData> GetFactionCompareData(int factionId)
         {
-            if (_memmoryCache.TryGetValue(factionId, out var cachedFactionCompareData))
+            FactionCompareData cachedData = await _dbService.GetFactionCache(factionId);
+
+            if (cachedData != null)
             {
-                return (FactionCompareData)cachedFactionCompareData;
+                return cachedData;
             }
 
             var factionPropertyBag = await GetFactionData(factionId);
@@ -70,8 +59,8 @@ namespace Torn.FactionComparer.Services
                 Members = factionPropertyBag.Members.Count,
                 AverageAge = factionsMembersInfo.Average(m => m.Age),
                 AverageLevel = factionsMembersInfo.Average(m => m.Level),
-                AverageActivity = TimeSpan.Zero,
-                AverageActivityPerDay = TimeSpan.Zero,
+                AverageActivity = factionsMembersInfo.Average(m => m.PersonalStats.UserActivity),
+                AverageActivityPerDay = factionsMembersInfo.Average(m => m.PersonalStats.UserActivity / m.Age),
                 AverageAwards = factionsMembersInfo.Average(m => m.Awards),
                 Xanax = factionsMembersInfo.Sum(m => m.PersonalStats.XanaxTaken),
                 LSD = factionsMembersInfo.Sum(m => m.PersonalStats.LsdTaken),
@@ -99,7 +88,7 @@ namespace Torn.FactionComparer.Services
                 BooksRead = factionsMembersInfo.Sum(m => m.PersonalStats.BooksRead),
             };
 
-            _memmoryCache.Set(factionId, factionCompareData, new TimeSpan(1, 0, 0));
+            await _dbService.AddFactionCache(factionCompareData);
 
             return factionCompareData;
         }
@@ -120,15 +109,27 @@ namespace Torn.FactionComparer.Services
         {
             using (var client = _httpClientFactory.CreateClient())
             {
-                _requestCount++;
-
                 var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://api.torn.com/user/{id}?selections=profile,personalstats&key={_apiKey}");
                 var httpResponseMessage = await client.SendAsync(httpRequestMessage);
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     var contentFirstFaction = await httpResponseMessage.Content.ReadAsStringAsync();
 
-                    return JsonConvert.DeserializeObject<UserPropertyBag>(contentFirstFaction);
+                    var data = JsonConvert.DeserializeObject<UserPropertyBag>(contentFirstFaction);
+
+                    if (data.ErrorInfo == null)
+                    {
+                        return data;
+                    }
+                    else if (data.ErrorInfo.ErrorCode == 5)
+                    {
+                        Thread.Sleep(1000*60);
+                        return await GetUserInfo(id);
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else
                     return null;
@@ -139,15 +140,27 @@ namespace Torn.FactionComparer.Services
         {
             using (var client = _httpClientFactory.CreateClient())
             {
-                _requestCount++;
-
                 var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://api.torn.com/faction/{factionId}?selections=basic&key={_apiKey}");
                 var httpResponseMessage = await client.SendAsync(httpRequestMessage);
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     var contentFirstFaction = await httpResponseMessage.Content.ReadAsStringAsync();
 
-                    return JsonConvert.DeserializeObject<FactionPropertyBag>(contentFirstFaction);
+                    var data = JsonConvert.DeserializeObject<FactionPropertyBag>(contentFirstFaction);
+
+                    if (data.ErrorInfo == null)
+                    {
+                        return data;
+                    }
+                    else if (data.ErrorInfo.ErrorCode == 5)
+                    {
+                        Thread.Sleep(1000 * 60);
+                        return await GetFactionData(factionId);
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else
                     return null;

@@ -19,6 +19,7 @@
 	
   <ItemGroup>
     <ProjectReference Include="..\Torn.FactionComparer.Contracts\Torn.FactionComparer.Contracts.csproj" />
+    <ProjectReference Include="..\Torn.FactionComparer.Infrastructure\Torn.FactionComparer.Infrastructure.csproj" />
     <ProjectReference Include="..\Torn.FactionComparer.Services\Torn.FactionComparer.Services.csproj" />
   </ItemGroup>
 

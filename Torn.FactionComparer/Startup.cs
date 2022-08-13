@@ -1,4 +1,6 @@
-﻿using Torn.FactionComparer.Services;
+﻿using Microsoft.EntityFrameworkCore;
+using Torn.FactionComparer.Infrastructure;
+using Torn.FactionComparer.Services;
 
 namespace Torn.FactionComparer
 {
@@ -15,10 +17,15 @@ namespace Torn.FactionComparer
         {
             services.AddControllersWithViews();
             services.AddHttpClient();
-            services.AddMemoryCache();
             services.AddTransient<ICompareDataRetriever, CompareDataRetriever>();
             services.AddTransient<IViewRenderer, ViewRenderer>();
             services.AddTransient<IImageGenerator, ImageGenerator>();
+
+            services.AddDbContext<TornContext>(options => options.UseSqlite(Configuration.GetConnectionString("CacheConnString")));
+            services.AddTransient<ITornContext, TornContext>();
+
+            services.AddTransient<IDbService, DbService>();
+            services.AddTransient<IStatsCalculator, StatsCalculator>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

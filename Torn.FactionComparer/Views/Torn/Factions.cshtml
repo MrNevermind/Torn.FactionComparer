@@ -1,249 +1,263 @@
-﻿@using Torn.FactionComparer.Services
+﻿@using System.Globalization
+@using Torn.FactionComparer.Services
 @model FactionCompareImageData
 <html>
     <head>
         <style>
-         tbody td.title-left{
-             text-align: left;
-         }
-         tbody td.title-right{
-             text-align: right;
-         }
-         tbody td.number{
-             text-align: center;
-         }
+            th, td{
+                background-color: #282828;
+                color: #efefef;
+            }
+             tbody td.title-left{
+                 text-align: left;
+             }
+             tbody td.title-right{
+                 text-align: right;
+             }
+             tbody td.number{
+                 text-align: center;
+             }
+             tbody td.progress{
+                 width: 150px;
+             }
+             tbody td.progress div{
+                 height: 20px;
+             }
         </style>
     </head>
     <body>
-        <table>
+        <table border="1" style="border-color:#4285f4;" cellspacing="0">
             <thead>
                 <tr>
-                    <th colspan="3">@Model.FirstFaction.Name</th>
-                    <th colspan="3">@Model.SeccondFaction.Name</th>
+                    <th colspan="6" style="background-color: black;">Totals</th>
+                </tr>
+                <tr>
+                    <th colspan="3" style="background-color:@(Model.Stats.Weight.First>Model.Stats.Weight.Seccond?"#58bb8a":"#e67c73");color: black;">@Model.FirstFaction.Name</th>
+                    <th colspan="3" style="background-color:@(Model.Stats.Weight.Seccond>Model.Stats.Weight.First?"#58bb8a":"#e67c73");color: black;">@Model.SeccondFaction.Name</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="title-left">Respect</td>
                     <td class="number">@Model.FirstFaction.Respect</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Respect.First%; background-color: @(Model.Stats.Respect.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Respect.Seccond%; background-color: @(Model.Stats.Respect.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.Respect</td>
                     <td class="title-right">Respect</td>
                 </tr>
                 <tr>
                     <td class="title-left">Best Chain</td>
                     <td class="number">@Model.FirstFaction.BestChain</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.BestChain.First%; background-color: @(Model.Stats.BestChain.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.BestChain.Seccond%; background-color: @(Model.Stats.BestChain.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.BestChain</td>
                     <td class="title-right">Best Chain</td>
                 </tr>
                 <tr>
                     <td class="title-left">Members</td>
                     <td class="number">@Model.FirstFaction.Members</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Members.First%; background-color: @(Model.Stats.Members.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Members.Seccond%; background-color: @(Model.Stats.Members.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.Members</td>
                     <td class="title-right">Members</td>
                 </tr>
                 <tr>
                     <td class="title-left">Average Age</td>
-                    <td class="number">@Model.FirstFaction.AverageAge</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
-                    <td class="number">@Model.SeccondFaction.AverageAge</td>
+                    <td class="number">@(Math.Round(Model.FirstFaction.AverageAge, 2))</td>
+                    <td class="progress"><div style="width:@Model.Stats.AverageAge.First%; background-color: @(Model.Stats.AverageAge.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.AverageAge.Seccond%; background-color: @(Model.Stats.AverageAge.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="number">@(Math.Round(Model.SeccondFaction.AverageAge, 2))</td>
                     <td class="title-right">Average Age</td>
                 </tr>
                 <tr>
                     <td class="title-left">Average Level</td>
-                    <td class="number">@Model.FirstFaction.AverageLevel</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
-                    <td class="number">@Model.SeccondFaction.AverageLevel</td>
+                    <td class="number">@(Math.Round(Model.FirstFaction.AverageLevel, 2))</td>
+                    <td class="progress"><div style="width:@Model.Stats.AverageLevel.First%; background-color: @(Model.Stats.AverageLevel.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.AverageLevel.Seccond%; background-color: @(Model.Stats.AverageLevel.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="number">@(Math.Round(Model.SeccondFaction.AverageLevel, 2))</td>
                     <td class="title-right">Average Level</td>
                 </tr>
                 <tr>
                     <td class="title-left">Average Activity</td>
-                    <td class="number"></td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
-                    <td class="number"></td>
+                    <td class="number">@(string.Format("{0:D2}:{1:D2}", TimeSpan.FromSeconds(Model.FirstFaction.AverageActivity).Hours, TimeSpan.FromSeconds(Model.FirstFaction.AverageActivity).Minutes))</td>
+                    <td class="progress"><div style="width:@Model.Stats.AverageActivity.First%; background-color: @(Model.Stats.AverageActivity.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.AverageActivity.Seccond%; background-color: @(Model.Stats.AverageActivity.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="number">@(string.Format("{0:D2}:{1:D2}", TimeSpan.FromSeconds(Model.SeccondFaction.AverageActivity).Hours, TimeSpan.FromSeconds(Model.SeccondFaction.AverageActivity).Minutes))</td>
                     <td class="title-right">Average Activity</td>
                 </tr>
                 <tr>
                     <td class="title-left">Average Activity / Day</td>
-                    <td class="number"></td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
-                    <td class="number"></td>
+                    <td class="number">@(string.Format("{0:D2}:{1:D2}", TimeSpan.FromSeconds(Model.FirstFaction.AverageActivityPerDay).Hours, TimeSpan.FromSeconds(Model.FirstFaction.AverageActivityPerDay).Minutes))</td>
+                    <td class="progress"><div style="width:@Model.Stats.AverageActivityPerDay.First%; background-color: @(Model.Stats.AverageActivityPerDay.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.AverageActivityPerDay.Seccond%; background-color: @(Model.Stats.AverageActivityPerDay.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="number">@(string.Format("{0:D2}:{1:D2}", TimeSpan.FromSeconds(Model.SeccondFaction.AverageActivityPerDay).Hours, TimeSpan.FromSeconds(Model.SeccondFaction.AverageActivityPerDay).Minutes))</td>
                     <td class="title-right">Average Activity / Day</td>
                 </tr>
                 <tr>
                     <td class="title-left">Average Awards</td>
-                    <td class="number">@Model.FirstFaction.AverageAwards</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
-                    <td class="number">@Model.SeccondFaction.AverageAwards</td>
+                    <td class="number">@(Math.Round(Model.FirstFaction.AverageAwards, 2))</td>
+                    <td class="progress"><div style="width:@Model.Stats.AverageAwards.First%; background-color: @(Model.Stats.AverageAwards.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.AverageAwards.Seccond%; background-color: @(Model.Stats.AverageAwards.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="number">@(Math.Round(Model.SeccondFaction.AverageAwards, 2))</td>
                     <td class="title-right">Average Awards</td>
                 </tr>
                 <tr>
                     <td class="title-left">Xanax</td>
                     <td class="number">@Model.FirstFaction.Xanax</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Xanax.First%; background-color: @(Model.Stats.Xanax.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Xanax.Seccond%; background-color: @(Model.Stats.Xanax.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.Xanax</td>
                     <td class="title-right">Xanax</td>
                 </tr>
                 <tr>
                     <td class="title-left">LSD</td>
                     <td class="number">@Model.FirstFaction.LSD</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.LSD.First%; background-color: @(Model.Stats.LSD.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.LSD.Seccond%; background-color: @(Model.Stats.LSD.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.LSD</td>
                     <td class="title-right">LSD</td>
                 </tr>
                 <tr>
                     <td class="title-left">Vicodin</td>
                     <td class="number">@Model.FirstFaction.Vicodin</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Vicodin.First%; background-color: @(Model.Stats.Vicodin.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Vicodin.Seccond%; background-color: @(Model.Stats.Vicodin.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.Vicodin</td>
                     <td class="title-right">Vicodin</td>
                 </tr>
                 <tr>
                     <td class="title-left">Overdoses</td>
                     <td class="number">@Model.FirstFaction.Overdoses</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Overdoses.First%; background-color: @(Model.Stats.Overdoses.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Overdoses.Seccond%; background-color: @(Model.Stats.Overdoses.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.Overdoses</td>
                     <td class="title-right">Overdoses</td>
                 </tr>
                 <tr>
                     <td class="title-left">Energy Refils</td>
                     <td class="number">@Model.FirstFaction.EnergyRefils</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.EnergyRefils.First%; background-color: @(Model.Stats.EnergyRefils.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.EnergyRefils.Seccond%; background-color: @(Model.Stats.EnergyRefils.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.EnergyRefils</td>
                     <td class="title-right">Energy Refils</td>
                 </tr>
                 <tr>
                     <td class="title-left">Energy Drinks</td>
                     <td class="number">@Model.FirstFaction.EnergyDrinks</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.EnergyDrinks.First%; background-color: @(Model.Stats.EnergyDrinks.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.EnergyDrinks.Seccond%; background-color: @(Model.Stats.EnergyDrinks.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.EnergyDrinks</td>
                     <td class="title-right">Energy Drinks</td>
                 </tr>
                 <tr>
                     <td class="title-left">Boosters</td>
                     <td class="number">@Model.FirstFaction.Boosters</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Boosters.First%; background-color: @(Model.Stats.Boosters.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Boosters.Seccond%; background-color: @(Model.Stats.Boosters.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.Boosters</td>
                     <td class="title-right">Boosters</td>
                 </tr>
                 <tr>
                     <td class="title-left">Stat Enchancers</td>
                     <td class="number">@Model.FirstFaction.StatEnhancers</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.StatEnhancers.First%; background-color: @(Model.Stats.StatEnhancers.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.StatEnhancers.Seccond%; background-color: @(Model.Stats.StatEnhancers.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.StatEnhancers</td>
                     <td class="title-right">Stat Enchancers</td>
                 </tr>
                 <tr>
                     <td class="title-left">Attacks Made</td>
                     <td class="number">@Model.FirstFaction.AttacksMade</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.AttacksMade.First%; background-color: @(Model.Stats.AttacksMade.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.AttacksMade.Seccond%; background-color: @(Model.Stats.AttacksMade.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.AttacksMade</td>
                     <td class="title-right">Attacks Made</td>
                 </tr>
                 <tr>
                     <td class="title-left">Revives Given</td>
                     <td class="number">@Model.FirstFaction.RevivesGiven</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.RevivesGiven.First%; background-color: @(Model.Stats.RevivesGiven.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.RevivesGiven.Seccond%; background-color: @(Model.Stats.RevivesGiven.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.RevivesGiven</td>
                     <td class="title-right">Revives Given</td>
                 </tr>
                 <tr>
                     <td class="title-left">Revives Received</td>
                     <td class="number">@Model.FirstFaction.RevivesReceived</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.RevivesReceived.First%; background-color: @(Model.Stats.RevivesReceived.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.RevivesReceived.Seccond%; background-color: @(Model.Stats.RevivesReceived.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.RevivesReceived</td>
                     <td class="title-right">Revives Received</td>
                 </tr>
                 <tr>
                     <td class="title-left">Bounties Places</td>
                     <td class="number">@Model.FirstFaction.BountiesPlaced</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.BountiesPlaced.First%; background-color: @(Model.Stats.BountiesPlaced.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.BountiesPlaced.Seccond%; background-color: @(Model.Stats.BountiesPlaced.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.BountiesPlaced</td>
                     <td class="title-right">Bounties Places</td>
                 </tr>
                 <tr>
                     <td class="title-left">Bounties Received</td>
                     <td class="number">@Model.FirstFaction.BountiesReceived</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.BountiesReceived.First%; background-color: @(Model.Stats.BountiesReceived.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.BountiesReceived.Seccond%; background-color: @(Model.Stats.BountiesReceived.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.BountiesReceived</td>
                     <td class="title-right">Bounties Received</td>
                 </tr>
                 <tr>
-                    <td class="title-left">Mission Credits</td>
+                    <td class="title-left">Mission C#e67c73its</td>
                     <td class="number">@Model.FirstFaction.MissionCredits</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Respect.First%; background-color: @(Model.Stats.Respect.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Respect.Seccond%; background-color: @(Model.Stats.Respect.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.MissionCredits</td>
-                    <td class="title-right">Mission Credits</td>
+                    <td class="title-right">Mission C#e67c73its</td>
                 </tr>
                 <tr>
                     <td class="title-left">Special Ammo</td>
                     <td class="number">@Model.FirstFaction.SpecialAmmo</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.SpecialAmmo.First%; background-color: @(Model.Stats.SpecialAmmo.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.SpecialAmmo.Seccond%; background-color: @(Model.Stats.SpecialAmmo.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.SpecialAmmo</td>
                     <td class="title-right">Special Ammo</td>
                 </tr>
                 <tr>
                     <td class="title-left">Job Points</td>
                     <td class="number">@Model.FirstFaction.JobPoints</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.JobPoints.First%; background-color: @(Model.Stats.JobPoints.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.JobPoints.Seccond%; background-color: @(Model.Stats.JobPoints.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.JobPoints</td>
                     <td class="title-right">Job Points</td>
                 </tr>
                 <tr>
                     <td class="title-left">Respect Earned</td>
                     <td class="number">@Model.FirstFaction.RespectEarned</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.RespectEarned.First%; background-color: @(Model.Stats.RespectEarned.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.RespectEarned.Seccond%; background-color: @(Model.Stats.RespectEarned.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.RespectEarned</td>
-                    <td class="title-right">Respect Earned<td>
+                    <td class="title-right">Respect Earned</td>
                 </tr>
                 <tr>
                     <td class="title-left">Networth</td>
-                    <td class="number">@Model.FirstFaction.Networth</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
-                    <td class="number">@Model.SeccondFaction.Networth</td>
+                    <td class="number">@(string.Format(new CultureInfo("en-US", false).NumberFormat, "{0:C}", Model.FirstFaction.Networth))</td>
+                    <td class="progress"><div style="width:@Model.Stats.Networth.First%; background-color: @(Model.Stats.Networth.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Networth.Seccond%; background-color: @(Model.Stats.Networth.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="number">@(string.Format(new CultureInfo("en-US", false).NumberFormat, "{0:C}", Model.SeccondFaction.Networth))</td>
                     <td class="title-right">Networth</td>
                 </tr>
                 <tr>
                     <td class="title-left">Karma</td>
                     <td class="number">@Model.FirstFaction.Karma</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Karma.First%; background-color: @(Model.Stats.Karma.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.Karma.Seccond%; background-color: @(Model.Stats.Karma.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.Karma</td>
                     <td class="title-right">Karma</td>
                 </tr>
                 <tr>
                     <td class="title-left">Books Read</td>
                     <td class="number">@Model.FirstFaction.BooksRead</td>
-                    <td class="progress-left"><div></div></td>
-                    <td class="progress-right"><div></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.BooksRead.First%; background-color: @(Model.Stats.BooksRead.First==100?"#58bb8a":"#e67c73");"></div></td>
+                    <td class="progress"><div style="width:@Model.Stats.BooksRead.Seccond%; background-color: @(Model.Stats.BooksRead.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.BooksRead</td>
                     <td class="title-right">Books Read</td>
                 </tr>

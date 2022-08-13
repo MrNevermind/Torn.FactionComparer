@@ -11,10 +11,10 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
-#if !DEBUG
-                webBuilder.UseKestrel();
-                webBuilder.UseUrls("http://176.223.137.147:8080");
-#endif
+                webBuilder.ConfigureKestrel((context, serverOptions) => {
+                    var kestrelSection = context.Configuration.GetSection("Kestrel");
+                    serverOptions.Configure(kestrelSection);
+                });
                 webBuilder.UseStartup<Startup>();
             });
 }
