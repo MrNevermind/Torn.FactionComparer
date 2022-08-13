@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Torn.FactionComparer.Contracts.FactionData;
 using Torn.FactionComparer.Contracts.UserData;
 
@@ -11,13 +12,15 @@ namespace Torn.FactionComparer.Services
 
     public class CompareDataRetriever : ICompareDataRetriever
     {
+        private readonly ILogger<CompareDataRetriever> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IDbService _dbService;
         private readonly IStatsCalculator _statsCalculator;
         private string _apiKey;
 
-        public CompareDataRetriever(IHttpClientFactory httpClientFactory, IDbService dbService, IStatsCalculator statsCalculator)
+        public CompareDataRetriever(ILogger<CompareDataRetriever> logger, IHttpClientFactory httpClientFactory, IDbService dbService, IStatsCalculator statsCalculator)
         {
+            _logger = logger;
             _httpClientFactory = httpClientFactory;
             _dbService = dbService;
             _statsCalculator = statsCalculator;
@@ -43,6 +46,7 @@ namespace Torn.FactionComparer.Services
 
             if (cachedData != null)
             {
+                _logger.LogInformation("Faction with ID {factionId} was found in cache", factionId);
                 return cachedData;
             }
 
@@ -60,7 +64,7 @@ namespace Torn.FactionComparer.Services
                 AverageAge = factionsMembersInfo.Average(m => m.Age),
                 AverageLevel = factionsMembersInfo.Average(m => m.Level),
                 AverageActivity = factionsMembersInfo.Average(m => m.PersonalStats.UserActivity),
-                AverageActivityPerDay = factionsMembersInfo.Average(m => m.PersonalStats.UserActivity / m.Age),
+                AverageActivityPerDay = factionsMembersInfo.Average(m => m.PersonalStats.UserActivity / (m.Age == 0 ? 1: m.Age)),
                 AverageAwards = factionsMembersInfo.Average(m => m.Awards),
                 Xanax = factionsMembersInfo.Sum(m => m.PersonalStats.XanaxTaken),
                 LSD = factionsMembersInfo.Sum(m => m.PersonalStats.LsdTaken),
@@ -101,6 +105,8 @@ namespace Torn.FactionComparer.Services
                 var user = await GetUserInfo(userId);
                 if (user != null && user.PersonalStats != null)
                     list.Add(user);
+                else
+                    _logger.LogWarning("User with ID {Id} was not found", userId);
             }
             return list.ToArray();
         }
@@ -123,11 +129,13 @@ namespace Torn.FactionComparer.Services
                     }
                     else if (data.ErrorInfo.ErrorCode == 5)
                     {
+                        _logger.LogWarning("Too many requests, sleeping for a minute.");
                         Thread.Sleep(1000*60);
                         return await GetUserInfo(id);
                     }
                     else
                     {
+                        _logger.LogError("Error happened in GetUserInfo. Code: {Code}, Message: {Message}", data.ErrorInfo.ErrorCode, data.ErrorInfo.ErrorMessage);
                         return null;
                     }
                 }
@@ -154,11 +162,13 @@ namespace Torn.FactionComparer.Services
                     }
                     else if (data.ErrorInfo.ErrorCode == 5)
                     {
+                        _logger.LogWarning("Too many requests, sleeping for a minute.");
                         Thread.Sleep(1000 * 60);
                         return await GetFactionData(factionId);
                     }
                     else
                     {
+                        _logger.LogError("Error happened in GetFactionData. Code: {Code}, Message: {Message}", data.ErrorInfo.ErrorCode, data.ErrorInfo.ErrorMessage);
                         return null;
                     }
                 }

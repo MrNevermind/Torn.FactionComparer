@@ -10,14 +10,16 @@ namespace Torn.FactionComparer.Controllers
         private readonly IViewRenderer _viewRenderer;
         private readonly IImageGenerator _imageGenerator;
         private readonly IDbService _dbService;
+        private readonly ILogger<TornController> _logger;
         private readonly Fixture _fixture;
 
-        public TornController(ICompareDataRetriever compareDataRetriever, IViewRenderer viewRenderer, IImageGenerator imageGenerator, IDbService dbService)
+        public TornController(ICompareDataRetriever compareDataRetriever, IViewRenderer viewRenderer, IImageGenerator imageGenerator, IDbService dbService, ILogger<TornController> logger)
         {
             _compareDataRetriever = compareDataRetriever;
             _viewRenderer = viewRenderer;
             _imageGenerator = imageGenerator;
             _dbService = dbService;
+            _logger = logger;
             _fixture = new Fixture();
         }
         public async Task<IActionResult> Cache(int factionId)
@@ -38,15 +40,27 @@ namespace Torn.FactionComparer.Controllers
         }
         public async Task<IActionResult> Factions(string apiKey, int firstFaction, int seccondFaction)
         {
+            _logger.LogInformation("Stats generation started");
             if (string.IsNullOrWhiteSpace(apiKey) || firstFaction == 0 || seccondFaction == 0)
+            {
+                _logger.LogWarning("One of the input fields was empty.");
                 return Ok(Array.Empty<byte>());
+            }
 
+            _logger.LogInformation("Retrieving compare data started");
             var compareData = await _compareDataRetriever.GetFactionCompareImageData(apiKey, firstFaction, seccondFaction);
             //var compareData = _fixture.Create<FactionCompareImageData>();
+            _logger.LogInformation("Retrieving compare data finished");
 
+            _logger.LogInformation("Rendering view started");
             var htmlContent = await _viewRenderer.RenderViewAsync(this, "Factions", compareData);
+            _logger.LogInformation("Rendering view finished");
 
+            _logger.LogInformation("Generating image started");
             var bytes = await _imageGenerator.GenerateImage(htmlContent);
+            _logger.LogInformation("Generating image finished");
+
+            _logger.LogInformation("Stats generation finished");
 
             return Ok(bytes);
         }

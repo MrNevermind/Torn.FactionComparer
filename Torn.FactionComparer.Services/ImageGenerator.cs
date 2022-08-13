@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace Torn.FactionComparer.Services
 {
@@ -9,6 +10,13 @@ namespace Torn.FactionComparer.Services
 
     public class ImageGenerator : IImageGenerator
     {
+        private readonly ILogger<ImageGenerator> _logger;
+
+        public ImageGenerator(ILogger<ImageGenerator> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task<byte[]> GenerateImage(string html)
         {
             var guid = Guid.NewGuid();
@@ -42,8 +50,9 @@ namespace Torn.FactionComparer.Services
             {
                 File.Delete(fileName);
             }
-            catch(IOException ex)
+            catch(Exception ex)
             {
+                _logger.LogWarning(ex, "Couln't delete {FileName}, retrying in 100ms. Reason: {Reason}", fileName, ex.Message);
                 Thread.Sleep(100);
                 SafeFileDelete(fileName);
             }

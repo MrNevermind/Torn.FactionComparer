@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Torn.FactionComparer.Infrastructure.Tables;
 
 namespace Torn.FactionComparer.Infrastructure
@@ -13,11 +14,14 @@ namespace Torn.FactionComparer.Infrastructure
 
     public class TornContext : DbContext, ITornContext
     {
+        private readonly ILogger<TornContext> _logger;
+
         private DbSet<FactionCompareDataTable> FactionCompareDatas { get; set; }
 
-        public TornContext(DbContextOptions options) : base(options)
+        public TornContext(ILogger<TornContext> logger, DbContextOptions options) : base(options)
         {
             Database.EnsureCreatedAsync().Wait();
+            _logger = logger;
         }
 
         public async Task ClearFactionCache(int factionId)
@@ -46,7 +50,14 @@ namespace Torn.FactionComparer.Infrastructure
 
         private async Task TrySave()
         {
-            await SaveChangesAsync();
+            try
+            {
+                await SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error happened during cache save: {Message}", ex.Message);
+            }
         }
     }
 }
