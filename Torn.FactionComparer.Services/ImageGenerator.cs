@@ -23,7 +23,7 @@ namespace Torn.FactionComparer.Services
 
             var pProcess = new Process();
             pProcess.StartInfo.FileName = "wkhtmltoimage";
-            pProcess.StartInfo.Arguments = $"--format jpeg --crop-w 900 {inputFile} {outputFile}";
+            pProcess.StartInfo.Arguments = $"--format jpeg --crop-w 770 {inputFile} {outputFile}";
             pProcess.Start();
             await pProcess.WaitForExitAsync();
             pProcess.Close();

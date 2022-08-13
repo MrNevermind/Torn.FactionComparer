@@ -4,10 +4,16 @@
 <html>
     <head>
         <style>
-            th, td{
+             th, td{
                 background-color: #282828;
                 color: #efefef;
-            }
+             }
+             th{
+                 font-size: 14px;
+             }
+             td{
+                 font-size: 12px;
+             }
              tbody td.title-left{
                  text-align: left;
              }
@@ -206,12 +212,12 @@
                     <td class="title-right">Bounties Received</td>
                 </tr>
                 <tr>
-                    <td class="title-left">Mission C#e67c73its</td>
+                    <td class="title-left">Mission Credits</td>
                     <td class="number">@Model.FirstFaction.MissionCredits</td>
                     <td class="progress"><div style="width:@Model.Stats.Respect.First%; background-color: @(Model.Stats.Respect.First==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="progress"><div style="width:@Model.Stats.Respect.Seccond%; background-color: @(Model.Stats.Respect.Seccond==100?"#58bb8a":"#e67c73");"></div></td>
                     <td class="number">@Model.SeccondFaction.MissionCredits</td>
-                    <td class="title-right">Mission C#e67c73its</td>
+                    <td class="title-right">Mission Credits</td>
                 </tr>
                 <tr>
                     <td class="title-left">Special Ammo</td>

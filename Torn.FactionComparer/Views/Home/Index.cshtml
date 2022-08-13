@@ -51,7 +51,8 @@ $(document).ready(function() {
                 seccondFaction: $("#seccond-faction").val()
             },
             success: function(data){
-                $("#result_image").attr("src","data:image/jpg;base64," + data);
+                $("#result_image").attr("src","data:image/jpeg;base64," + data);
+                $("#result_image").attr("alt", $("#first-faction").val() + "-" + $("#seccond-faction").val());
                 $(".spinner-border").addClass("visually-hidden");
             }
         });
