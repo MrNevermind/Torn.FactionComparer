@@ -11,7 +11,6 @@ namespace Torn.FactionComparer.Controllers
         private readonly IImageGenerator _imageGenerator;
         private readonly IDbService _dbService;
         private readonly ILogger<TornController> _logger;
-        private readonly Fixture _fixture;
 
         public TornController(ICompareDataRetriever compareDataRetriever, IViewRenderer viewRenderer, IImageGenerator imageGenerator, IDbService dbService, ILogger<TornController> logger)
         {
@@ -20,14 +19,15 @@ namespace Torn.FactionComparer.Controllers
             _imageGenerator = imageGenerator;
             _dbService = dbService;
             _logger = logger;
-            _fixture = new Fixture();
         }
         public async Task<IActionResult> Cache(int factionId)
         {
             if (factionId == 0)
                 return Ok(null);
 
-            return Ok(await _dbService.GetFactionCacheDateTime(factionId));
+            var date = await _dbService.GetFactionCacheDateTime(factionId);
+
+            return Ok(date.HasValue ? date.Value.ToShortDateString() + " " + date.Value.ToShortTimeString() : null);
         }
         public async Task<IActionResult> Clear(int factionId)
         {
@@ -49,7 +49,6 @@ namespace Torn.FactionComparer.Controllers
 
             _logger.LogInformation("Retrieving compare data started");
             var compareData = await _compareDataRetriever.GetFactionCompareImageData(apiKey, firstFaction, seccondFaction);
-            //var compareData = _fixture.Create<FactionCompareImageData>();
             _logger.LogInformation("Retrieving compare data finished");
 
             _logger.LogInformation("Rendering view started");
