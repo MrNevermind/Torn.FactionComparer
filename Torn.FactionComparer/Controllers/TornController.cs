@@ -1,5 +1,4 @@
-﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Torn.FactionComparer.Services;
 
 namespace Torn.FactionComparer.Controllers
